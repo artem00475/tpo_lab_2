@@ -17,7 +17,7 @@ public class Ln {
         BigDecimal currentIteration = BigDecimal.valueOf(x);
 
         int n = 3;
-        while (prevIteration.subtract(currentIteration).abs().compareTo(BigDecimal.valueOf(eps)) > -1 && n <= 10000) {
+        while (prevIteration.subtract(currentIteration).abs().compareTo(BigDecimal.valueOf(eps)) > -1) {
             prevIteration = new BigDecimal(currentIteration.toString());
             BigDecimal res = BigDecimal.valueOf(x).pow(n);
             currentIteration = currentIteration.add(res.divide(BigDecimal.valueOf(n), BigDecimal.valueOf(eps).scale(), RoundingMode.HALF_EVEN));

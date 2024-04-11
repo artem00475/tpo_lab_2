@@ -17,7 +17,7 @@ public class Sin {
         BigDecimal prevIteration = BigDecimal.ZERO;
         BigDecimal currentIteration = BigDecimal.valueOf(x);
         int n = 2;
-        while (prevIteration.subtract(currentIteration).abs().compareTo(BigDecimal.valueOf(eps)) > -1 && n <= 10000) {
+        while (prevIteration.subtract(currentIteration).abs().compareTo(BigDecimal.valueOf(eps)) > -1) {
             prevIteration = new BigDecimal(currentIteration.toString());
             BigDecimal res = new BigDecimal(String.valueOf(Math.pow(-1, n-1) * Math.pow(x, 2*n -1)));
             currentIteration = currentIteration.add(res.divide(factorial(2*n-1), BigDecimal.valueOf(eps).scale(), RoundingMode.HALF_EVEN));
