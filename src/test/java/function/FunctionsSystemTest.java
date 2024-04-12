@@ -91,53 +91,14 @@ public class FunctionsSystemTest {
 
     @ParameterizedTest
     @CsvSource(value = {
-        "2, 2.3577070962795593156432819",
-        "10, 6.736450233559547752585227",
-        "-1, 3.626479778262002303851671",
-        "-2, 3.978377778442476714624968",
-        "-30, 41.3373505681757163208865",
+            "2, 2.3577070962795593156432819",
+            "10, 6.736450233559547752585227",
+            "-1, 3.626479778262002303851671",
+            "-2, 3.978377778442476714624968",
+            "-30, 41.3373505681757163208865",
     })
     void calculateAllMocks(double x, double y) {
         FunctionsSystem functionsSystem = new FunctionsSystem(csc,sin, tan, cos, ln,log2,log3,log5,log10);
-        Assertions.assertEquals(y, functionsSystem.calculate(x), eps);
-    }
-
-    @ParameterizedTest
-    @CsvSource(value = {
-            "2, 2.3577070962795593156432819",
-            "10, 6.736450233559547752585227",
-            "-1, 3.626479778262002303851671",
-            "-2, 3.978377778442476714624968",
-            "-30, 41.3373505681757163208865",
-    })
-    void calculateOriginalSin(double x, double y) {
-        FunctionsSystem functionsSystem = new FunctionsSystem(csc,new Sin(1e-20), tan, cos, ln,log2,log3,log5,log10);
-        Assertions.assertEquals(y, functionsSystem.calculate(x), eps);
-    }
-
-    @ParameterizedTest
-    @CsvSource(value = {
-            "2, 2.3577070962795593156432819",
-            "10, 6.736450233559547752585227",
-            "-1, 3.626479778262002303851671",
-            "-2, 3.978377778442476714624968",
-            "-30, 41.3373505681757163208865",
-    })
-    void calculateOriginalCos(double x, double y) {
-        FunctionsSystem functionsSystem = new FunctionsSystem(csc,sin, tan, new Cos(sin), ln,log2,log3,log5,log10);
-        Assertions.assertEquals(y, functionsSystem.calculate(x), eps);
-    }
-
-    @ParameterizedTest
-    @CsvSource(value = {
-            "2, 2.3577070962795593156432819",
-            "10, 6.736450233559547752585227",
-            "-1, 3.626479778262002303851671",
-            "-2, 3.978377778442476714624968",
-            "-30, 41.3373505681757163208865",
-    })
-    void calculateOriginalCsc(double x, double y) {
-        FunctionsSystem functionsSystem = new FunctionsSystem(new Csc(sin),sin, tan, cos, ln,log2,log3,log5,log10);
         Assertions.assertEquals(y, functionsSystem.calculate(x), eps);
     }
 
@@ -162,8 +123,8 @@ public class FunctionsSystemTest {
             "-2, 3.978377778442476714624968",
             "-30, 41.3373505681757163208865",
     })
-    void calculateOriginalCosAndSin(double x, double y) {
-        FunctionsSystem functionsSystem = new FunctionsSystem(csc,sin, tan, new Cos(new Sin(1e-20)), ln,log2,log3,log5,log10);
+    void calculateOriginalCscAndTan(double x, double y) {
+        FunctionsSystem functionsSystem = new FunctionsSystem(new Csc(sin),sin, new Tan(cos, sin), cos, ln,log2,log3,log5,log10);
         Assertions.assertEquals(y, functionsSystem.calculate(x), eps);
     }
 
@@ -175,8 +136,9 @@ public class FunctionsSystemTest {
             "-2, 3.978377778442476714624968",
             "-30, 41.3373505681757163208865",
     })
-    void calculateOriginalCscAndSin(double x, double y) {
-        FunctionsSystem functionsSystem = new FunctionsSystem(new Csc(new Sin(1e-20)),sin, tan, cos, ln,log2,log3,log5,log10);
+    void calculateOriginalCscAndTanAndCos(double x, double y) {
+        Cos originalCos = new Cos(sin);
+        FunctionsSystem functionsSystem = new FunctionsSystem(new Csc(sin),sin, new Tan(originalCos, sin), originalCos, ln,log2,log3,log5,log10);
         Assertions.assertEquals(y, functionsSystem.calculate(x), eps);
     }
 
@@ -188,8 +150,10 @@ public class FunctionsSystemTest {
             "-2, 3.978377778442476714624968",
             "-30, 41.3373505681757163208865",
     })
-    void calculateOriginalTanAndSin(double x, double y) {
-        FunctionsSystem functionsSystem = new FunctionsSystem(csc,sin, new Tan(cos, new Sin(1e-20)), cos, ln,log2,log3,log5,log10);
+    void calculateOriginalCscAndTanAndCosAndSin(double x, double y) {
+        Sin originalSin = new Sin(1e-20);
+        Cos originalCos = new Cos(originalSin);
+        FunctionsSystem functionsSystem = new FunctionsSystem(new Csc(originalSin),originalSin, new Tan(originalCos, originalSin), originalCos, ln,log2,log3,log5,log10);
         Assertions.assertEquals(y, functionsSystem.calculate(x), eps);
     }
 
@@ -201,8 +165,8 @@ public class FunctionsSystemTest {
             "-2, 3.978377778442476714624968",
             "-30, 41.3373505681757163208865",
     })
-    void calculateOriginalTanAndCos(double x, double y) {
-        FunctionsSystem functionsSystem = new FunctionsSystem(csc,sin, new Tan(new Cos(sin), sin), cos, ln,log2,log3,log5,log10);
+    void calculateOriginalLog(double x, double y) {
+        FunctionsSystem functionsSystem = new FunctionsSystem(csc,sin, tan, cos, ln,new Log(ln,2),new Log(ln,3),new Log(ln,5),new Log(ln,10));
         Assertions.assertEquals(y, functionsSystem.calculate(x), eps);
     }
 
@@ -214,8 +178,9 @@ public class FunctionsSystemTest {
             "-2, 3.978377778442476714624968",
             "-30, 41.3373505681757163208865",
     })
-    void calculateOriginalTanAndSinAndCos(double x, double y) {
-        FunctionsSystem functionsSystem = new FunctionsSystem(csc,sin, new Tan(new Cos(sin), new Sin(1e-20)), cos, ln,log2,log3,log5,log10);
+    void calculateOriginalLogAndLn(double x, double y) {
+        Ln originalLn = new Ln(1e-20);
+        FunctionsSystem functionsSystem = new FunctionsSystem(csc,sin, tan, cos, originalLn,new Log(originalLn, 2),new Log(originalLn, 3),new Log(originalLn,5),new Log(originalLn, 10));
         Assertions.assertEquals(y, functionsSystem.calculate(x), eps);
     }
 
@@ -227,112 +192,11 @@ public class FunctionsSystemTest {
             "-2, 3.978377778442476714624968",
             "-30, 41.3373505681757163208865",
     })
-    void calculateOriginalLn(double x, double y) {
-        FunctionsSystem functionsSystem = new FunctionsSystem(csc,sin, tan, cos, new Ln(1e-20),log2,log3,log5,log10);
-        Assertions.assertEquals(y, functionsSystem.calculate(x), eps);
-    }
-
-    @ParameterizedTest
-    @CsvSource(value = {
-            "2, 2.3577070962795593156432819",
-            "10, 6.736450233559547752585227",
-            "-1, 3.626479778262002303851671",
-            "-2, 3.978377778442476714624968",
-            "-30, 41.3373505681757163208865",
-    })
-    void calculateOriginalLog2(double x, double y) {
-        FunctionsSystem functionsSystem = new FunctionsSystem(csc,sin, tan, cos, ln,new Log(ln, 2),log3,log5,log10);
-        Assertions.assertEquals(y, functionsSystem.calculate(x), eps);
-    }
-
-    @ParameterizedTest
-    @CsvSource(value = {
-            "2, 2.3577070962795593156432819",
-            "10, 6.736450233559547752585227",
-            "-1, 3.626479778262002303851671",
-            "-2, 3.978377778442476714624968",
-            "-30, 41.3373505681757163208865",
-    })
-    void calculateOriginalLog3(double x, double y) {
-        FunctionsSystem functionsSystem = new FunctionsSystem(csc,sin, tan, cos, ln,log2,new Log(ln, 3),log5,log10);
-        Assertions.assertEquals(y, functionsSystem.calculate(x), eps);
-    }
-
-    @ParameterizedTest
-    @CsvSource(value = {
-            "2, 2.3577070962795593156432819",
-            "10, 6.736450233559547752585227",
-            "-1, 3.626479778262002303851671",
-            "-2, 3.978377778442476714624968",
-            "-30, 41.3373505681757163208865",
-    })
-    void calculateOriginalLog5(double x, double y) {
-        FunctionsSystem functionsSystem = new FunctionsSystem(csc,sin, tan, cos, ln,log2,log3,new Log(ln, 5),log10);
-        Assertions.assertEquals(y, functionsSystem.calculate(x), eps);
-    }
-
-    @ParameterizedTest
-    @CsvSource(value = {
-            "2, 2.3577070962795593156432819",
-            "10, 6.736450233559547752585227",
-            "-1, 3.626479778262002303851671",
-            "-2, 3.978377778442476714624968",
-            "-30, 41.3373505681757163208865",
-    })
-    void calculateOriginalLog10(double x, double y) {
-        FunctionsSystem functionsSystem = new FunctionsSystem(csc,sin, tan, cos, ln,log2,log3,log5,new Log(ln, 10));
-        Assertions.assertEquals(y, functionsSystem.calculate(x), eps);
-    }
-
-    @ParameterizedTest
-    @CsvSource(value = {
-            "2, 2.3577070962795593156432819",
-            "10, 6.736450233559547752585227",
-            "-1, 3.626479778262002303851671",
-            "-2, 3.978377778442476714624968",
-            "-30, 41.3373505681757163208865",
-    })
-    void calculateOriginalLog2AndLn(double x, double y) {
-        FunctionsSystem functionsSystem = new FunctionsSystem(csc,sin, tan, cos, ln,new Log(new Ln(1e-20), 2),log3,log5,log10);
-        Assertions.assertEquals(y, functionsSystem.calculate(x), eps);
-    }
-
-    @ParameterizedTest
-    @CsvSource(value = {
-            "2, 2.3577070962795593156432819",
-            "10, 6.736450233559547752585227",
-            "-1, 3.626479778262002303851671",
-            "-2, 3.978377778442476714624968",
-            "-30, 41.3373505681757163208865",
-    })
-    void calculateOriginalLog3AndLn(double x, double y) {
-        FunctionsSystem functionsSystem = new FunctionsSystem(csc,sin, tan, cos, ln,log2,new Log(new Ln(1e-20), 3),log5,log10);
-        Assertions.assertEquals(y, functionsSystem.calculate(x), eps);
-    }
-
-    @ParameterizedTest
-    @CsvSource(value = {
-            "2, 2.3577070962795593156432819",
-            "10, 6.736450233559547752585227",
-            "-1, 3.626479778262002303851671",
-            "-2, 3.978377778442476714624968",
-            "-30, 41.3373505681757163208865",
-    })
-    void calculateOriginalLog5AndLn(double x, double y) {
-        FunctionsSystem functionsSystem = new FunctionsSystem(csc,sin, tan, cos, ln,log2,log3,new Log(new Ln(1e-20), 5),log10);
-        Assertions.assertEquals(y, functionsSystem.calculate(x), eps);
-    }
-
-    @ParameterizedTest
-    @CsvSource(value = {
-            "2, 2.3577070962795593156432819",
-            "10, 6.736450233559547752585227",
-            "-1, 3.626479778262002303851671",
-            "-2, 3.978377778442476714624968",
-            "-30, 41.3373505681757163208865",
-    })
-    void calculateOriginalLog10AndLn(double x, double y) {
-        FunctionsSystem functionsSystem = new FunctionsSystem(csc,sin, tan, cos, ln,log2,log3,log5,new Log(new Ln(1e-20), 10));
+    void calculateOriginalAll(double x, double y) {
+        Sin originalSin = new Sin(1e-20);
+        Cos originalCos = new Cos(originalSin);
+        Ln originalLn = new Ln(1e-20);
+        FunctionsSystem functionsSystem = new FunctionsSystem(new Csc(originalSin),originalSin, new Tan(originalCos, originalSin), originalCos, originalLn,new Log(originalLn, 2),new Log(originalLn, 3),new Log(originalLn,5),new Log(originalLn, 10));
         Assertions.assertEquals(y, functionsSystem.calculate(x), eps);
     }
 }
